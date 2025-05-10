@@ -1,9 +1,10 @@
+import { AccountStatus } from '../../../shared/types';
 import { Supplier } from '../domain/Supplier';
-import { SupplierRepo, SupplierStatus } from '../types';
+import { SupplierRepo } from '../types';
 
 export const updateSupplierStatus = async (
     id: string,
-    newStatus: SupplierStatus,
+    newStatus: AccountStatus,
     supplierRepo: SupplierRepo
 ): Promise<Supplier> => {
     const exists = await supplierRepo.findById(id);

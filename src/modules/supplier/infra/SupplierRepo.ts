@@ -1,12 +1,13 @@
 import { SupplierModel } from './SupplierModel';
 import { Supplier } from '../domain/Supplier';
-import { SupplierRepo, SupplierStatus } from '../types';
+import { SupplierRepo } from '../types';
+import { AccountStatus } from '../../../shared/types';
 
 export class MongooseSupplierRepo implements SupplierRepo {
     async save(supplier: Supplier): Promise<void> {
         const doc = new SupplierModel({
             ...supplier,
-            status: SupplierStatus.PENDING
+            status: AccountStatus.PENDING
         });
         await doc.save();
     }
@@ -61,7 +62,7 @@ export class MongooseSupplierRepo implements SupplierRepo {
         }
     }
 
-    async updateStatus(id: string, supplier: Supplier, newStatus: SupplierStatus): Promise<Supplier | null> {
+    async updateStatus(id: string, supplier: Supplier, newStatus: AccountStatus): Promise<Supplier | null> {
         try {
             if (!supplier) return null;
             const updatedSupplier = await SupplierModel.findByIdAndUpdate(

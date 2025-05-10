@@ -1,5 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
-import { SupplierDocument, SupplierStatus } from '../types';
+import { SupplierDocument } from '../types';
+import { AccountStatus } from '../../../shared/types';
 
 const SupplierSchema = new Schema<SupplierDocument>({
     name: {
@@ -38,8 +39,8 @@ const SupplierSchema = new Schema<SupplierDocument>({
     website: { type: String },
     status: {
         type: String,
-        enum: Object.values(SupplierStatus),
-        default: SupplierStatus.PENDING,
+        enum: Object.values(AccountStatus),
+        default: AccountStatus.PENDING,
     },
     coverPicture: { type: String },
     donationSchedule: {

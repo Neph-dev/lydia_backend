@@ -1,5 +1,4 @@
-import { Address, DonationDays, DonationFrequency, Establishment } from "../../../shared/types";
-import { SupplierStatus } from "./SupplierStatus";
+import { AccountStatus, Address, DonationDays, DonationFrequency, Establishment } from "../../../shared/types";
 
 export interface CreateSupplierDTO {
     name: string;
@@ -9,7 +8,7 @@ export interface CreateSupplierDTO {
     emailAddress: string;
     description?: string;
     website?: string;
-    status: SupplierStatus;
+    status: AccountStatus;
     coverPicture?: string;
     donationSchedule: {
         days: DonationDays[];

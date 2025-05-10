@@ -1,5 +1,4 @@
-import { Address, DonationDays, DonationFrequency, Establishment } from "../../../shared/types";
-import { SupplierStatus } from "../types";
+import { AccountStatus, Address, DonationDays, DonationFrequency, Establishment } from "../../../shared/types";
 
 export class Supplier {
     constructor(
@@ -15,7 +14,7 @@ export class Supplier {
         public description?: string,
         public website?: string,
         public coverPicture?: string,
-        public status: SupplierStatus = SupplierStatus.PENDING,
+        public status: AccountStatus = AccountStatus.PENDING,
         public createdAt: Date = new Date(),
         public updatedAt: Date = new Date()
     ) {
@@ -60,7 +59,7 @@ export class Supplier {
 
     static updateStatus(
         existingSupplier: Omit<Supplier, 'updatedAt' | 'status'>,
-        newStatus: SupplierStatus
+        newStatus: AccountStatus
     ): Supplier {
         return new Supplier(
             existingSupplier.name,
