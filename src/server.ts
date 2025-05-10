@@ -4,6 +4,7 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 import { createSupplierController } from './modules/supplier/controllers';
 import { updateSupplierStatusController } from './modules/supplier/controllers/updateSupplierStatusController';
+import { createItemController } from './modules/item/controllers/createItemController';
 
 const uri = process.env.MONGODB_URL ?? '';
 if (!uri) {
@@ -24,6 +25,8 @@ app.patch('/api/v1/supplier/:id/status', async (req: Request, res: Response, nex
         next(error);
     }
 });
+
+app.post('/api/v1/create-item', createItemController);
 
 app.get('/api/v1/health', (req: Request, res: Response): void => {
     res.status(200).send('OK');

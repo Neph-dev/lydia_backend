@@ -1,0 +1,7 @@
+export enum ItemStatus {
+    AVAILABLE = 'AVAILABLE',
+    CLAIMED = 'CLAIMED',
+    EXPIRED = 'EXPIRED',
+    CANCELLED = 'CANCELLED',
+    UNAVAILABLE = 'UNAVAILABLE'
+}

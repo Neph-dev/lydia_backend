@@ -1,4 +1,3 @@
-
 import { Request, Response } from 'express';
 import { createSupplier } from '../useCases';
 import { MongooseSupplierRepo } from '../infra/SupplierRepo';
