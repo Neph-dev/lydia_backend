@@ -5,6 +5,7 @@ import mongoose from 'mongoose';
 import { createSupplierController } from './modules/supplier/controllers';
 import { updateSupplierStatusController } from './modules/supplier/controllers/updateSupplierStatusController';
 import { createItemController } from './modules/item/controllers/createItemController';
+import { getItemsBySupplierController } from './modules/item/controllers/getItemsController';
 
 const uri = process.env.MONGODB_URL ?? '';
 if (!uri) {
@@ -27,6 +28,7 @@ app.patch('/api/v1/supplier/:id/status', async (req: Request, res: Response, nex
 });
 
 app.post('/api/v1/create-item', createItemController);
+app.get('/api/v1/get-supplier-items', getItemsBySupplierController);
 
 app.get('/api/v1/health', (req: Request, res: Response): void => {
     res.status(200).send('OK');

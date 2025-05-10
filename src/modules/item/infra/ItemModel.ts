@@ -25,6 +25,24 @@ const ItemSchema = new Schema<ItemDocument>({
         type: String,
         required: true
     },
+    category: {
+        type: String,
+        enum: [
+            'VEGETABLES',
+            'FRUITS',
+            'DAIRY',
+            'MEAT',
+            'GRAINS',
+            'SEAFOOD',
+            'BEVERAGES',
+            'SNACKS',
+            'BAKERY',
+            'CONDIMENTS',
+            'FROZEN_FOODS',
+            'CANNED_GOODS',
+        ],
+        required: true
+    },
     claimedBy: {
         type: Schema.Types.ObjectId,
         ref: 'Beneficiary'

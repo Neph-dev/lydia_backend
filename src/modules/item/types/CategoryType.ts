@@ -1,0 +1,14 @@
+export enum CategoryType {
+    VEGETABLES = 'VEGETABLES',
+    FRUITS = 'FRUITS',
+    DAIRY = 'DAIRY',
+    MEAT = 'MEAT',
+    GRAINS = 'GRAINS',
+    SEAFOOD = 'SEAFOOD',
+    BEVERAGES = 'BEVERAGES',
+    SNACKS = 'SNACKS',
+    BAKERY = 'BAKERY',
+    CONDIMENTS = 'CONDIMENTS',
+    FROZEN_FOODS = 'FROZEN_FOODS',
+    CANNED_GOODS = 'CANNED_GOODS',
+}

@@ -1,5 +1,5 @@
 import { Document } from 'mongoose';
-import { Address, Establishment } from "../../../shared/types";
+import { Address, DonationDays, DonationFrequency, Establishment } from "../../../shared/types";
 import { SupplierStatus } from './SupplierStatus';
 
 export interface SupplierDocument extends Document {
@@ -12,6 +12,10 @@ export interface SupplierDocument extends Document {
     website?: string;
     coverPicture?: string;
     status: SupplierStatus;
+    donationSchedule: {
+        days: DonationDays[];
+        frequency: DonationFrequency;
+    };
     createdAt: Date;
     updatedAt: Date;
 }

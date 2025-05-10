@@ -14,7 +14,7 @@ export class MongooseItemRepo implements ItemRepo {
     async findById(id: string): Promise<Item | null> {
         try {
             if (!id) return null;
-            const doc = await ItemModel.findById(id);
+            const doc = await ItemModel.findById(id).populate('supplierId', 'name');;
             if (!doc) return null;
 
             return new Item(
@@ -25,6 +25,7 @@ export class MongooseItemRepo implements ItemRepo {
                 doc.bestBefore,
                 doc.readyBy,
                 doc.description,
+                doc.category,
                 doc.claimedBy,
                 doc.status,
                 doc.images,
@@ -36,10 +37,10 @@ export class MongooseItemRepo implements ItemRepo {
         }
     }
 
-    async findByAnything(field: string): Promise<Item[]> {
+    async findByAnything(key: string, value: string): Promise<Item[]> {
         try {
-            if (!field) return [];
-            const docs = await ItemModel.find({ field });
+            if (!value || !key) return [];
+            const docs = await ItemModel.find({ [ key ]: value }).populate('supplierId', 'name');
             if (!docs) return [];
 
             return docs.map(doc => new Item(
@@ -50,14 +51,15 @@ export class MongooseItemRepo implements ItemRepo {
                 doc.bestBefore,
                 doc.readyBy,
                 doc.description,
+                doc.category,
                 doc.claimedBy,
                 doc.status,
                 doc.images,
                 doc.createdAt
             ));
         } catch (error) {
-            console.error(`Database error in ${field}: ${error instanceof Error ? error.message : 'Unknown error'}`);
-            throw new Error(`Failed to check items by ${field}: ${error instanceof Error ? error.message : 'Database connection issue'}`);
+            console.error(`Database error in ${key}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+            throw new Error(`Failed to check items by ${key}: ${error instanceof Error ? error.message : 'Database connection issue'}`);
         }
     }
 
@@ -68,7 +70,7 @@ export class MongooseItemRepo implements ItemRepo {
                 id,
                 { status: newStatus },
                 { new: true }
-            );
+            ).populate('supplierId', 'name');
 
             if (!updatedItem) return null;
 
@@ -80,6 +82,7 @@ export class MongooseItemRepo implements ItemRepo {
                 updatedItem.bestBefore,
                 updatedItem.readyBy,
                 updatedItem.description,
+                updatedItem.category,
                 updatedItem.claimedBy,
                 updatedItem.status,
                 updatedItem.images,
@@ -110,6 +113,7 @@ export class MongooseItemRepo implements ItemRepo {
                 updatedItem.bestBefore,
                 updatedItem.readyBy,
                 updatedItem.description,
+                updatedItem.category,
                 updatedItem.claimedBy,
                 updatedItem.status,
                 updatedItem.images,

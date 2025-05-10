@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { ItemStatus, ItemType } from "../types";
+import { CategoryType, ItemStatus, ItemType } from "../types";
 
 export class Item {
     constructor(
@@ -10,6 +10,7 @@ export class Item {
         public bestBefore: Date,
         public readyBy: Date,
         public description: string,
+        public category: CategoryType,
         public claimedBy?: mongoose.Types.ObjectId,
         public status: ItemStatus = ItemStatus.AVAILABLE,
         public images?: mongoose.Types.ObjectId[],
@@ -30,6 +31,7 @@ export class Item {
             data.bestBefore,
             data.readyBy,
             data.description,
+            data.category,
             data.claimedBy,
             undefined,
             data.images
@@ -48,6 +50,7 @@ export class Item {
             updates.bestBefore ?? existingItem.bestBefore,
             updates.readyBy ?? existingItem.readyBy,
             updates.description ?? existingItem.description,
+            updates.category ?? existingItem.category,
             updates.claimedBy ?? existingItem.claimedBy,
             existingItem.status,
             existingItem.images,
@@ -68,6 +71,7 @@ export class Item {
             existingItem.bestBefore,
             existingItem.readyBy,
             existingItem.description,
+            existingItem.category,
             existingItem.claimedBy,
             newStatus,
             existingItem.images,
@@ -88,6 +92,7 @@ export class Item {
             existingItem.bestBefore,
             existingItem.readyBy,
             existingItem.description,
+            existingItem.category,
             claimedBy,
             ItemStatus.CLAIMED,
             existingItem.images,

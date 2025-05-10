@@ -1,4 +1,4 @@
-import { Address, Establishment } from "../../../shared/types";
+import { Address, DonationDays, DonationFrequency, Establishment } from "../../../shared/types";
 import { SupplierStatus } from "../types";
 
 export class Supplier {
@@ -8,6 +8,10 @@ export class Supplier {
         public address: Address,
         public phoneNumber: string,
         public emailAddress: string,
+        public donationSchedule: {
+            days: DonationDays[];
+            frequency: DonationFrequency;
+        },
         public description?: string,
         public website?: string,
         public coverPicture?: string,
@@ -27,6 +31,7 @@ export class Supplier {
             data.address,
             data.phoneNumber,
             data.emailAddress,
+            data.donationSchedule,
             data.description,
             data.website,
             data.coverPicture
@@ -43,6 +48,7 @@ export class Supplier {
             updates.address ?? existingSupplier.address,
             updates.phoneNumber ?? existingSupplier.phoneNumber,
             updates.emailAddress ?? existingSupplier.emailAddress,
+            updates.donationSchedule ?? existingSupplier.donationSchedule,
             updates.description ?? existingSupplier.description,
             updates.website ?? existingSupplier.website,
             updates.coverPicture ?? existingSupplier.coverPicture,
@@ -62,6 +68,7 @@ export class Supplier {
             existingSupplier.address,
             existingSupplier.phoneNumber,
             existingSupplier.emailAddress,
+            existingSupplier.donationSchedule,
             existingSupplier.description,
             existingSupplier.website,
             existingSupplier.coverPicture,

@@ -42,6 +42,34 @@ const SupplierSchema = new Schema<SupplierDocument>({
         default: SupplierStatus.PENDING,
     },
     coverPicture: { type: String },
+    donationSchedule: {
+        days: [ {
+            day: {
+                type: String,
+                enum: [ 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday' ],
+                required: true
+            },
+            start: {
+                type: String,
+                required: true
+            },
+            end: {
+                type: String,
+                required: true
+            }
+        } ],
+        frequency: {
+            interval: {
+                type: Number,
+                required: true
+            },
+            unit: {
+                type: String,
+                enum: [ 'Week', 'Month' ],
+                required: true
+            }
+        }
+    },
     createdAt: {
         type: Date,
         default: Date.now
