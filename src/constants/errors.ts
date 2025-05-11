@@ -40,5 +40,12 @@ export const ErrorResponse = {
             code: "SUPPLIER_UPDATE_STATUS",
             statusCode: 500,
         },
+        FIELDS: {
+            MISSING_FIELDS: {
+                message: "Missing fields :fields",
+                code: "MISSING_FIELDS",
+                statusCode: 400,
+            }
+        }
     }
 };

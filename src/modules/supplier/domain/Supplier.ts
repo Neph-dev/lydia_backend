@@ -1,12 +1,10 @@
 import { AccountStatus, Address, DonationDays, DonationFrequency, Establishment } from "../../../shared/types";
+import { validateSupplier } from "../utils/validateSupplier";
 
 /**
  * Represents a food supplier entity in the system
  */
 export class Supplier {
-    /**
-     * Creates a new Supplier instance
-     */
     constructor(
         public readonly name: string,
         public readonly establishment: Establishment,
@@ -24,21 +22,7 @@ export class Supplier {
         public readonly createdAt: Date = new Date(),
         public readonly updatedAt: Date = new Date()
     ) {
-        this.validateSupplier();
-    }
-
-    /**
-     * Validates required supplier fields
-     * @throws Error if validation fails
-     */
-    private validateSupplier(): void {
-        if (!this.name) {
-            throw new Error('Supplier must have a name');
-        }
-
-        if (!this.emailAddress) {
-            throw new Error('Supplier must have an email address');
-        }
+        validateSupplier(this);
     }
 
     /**
