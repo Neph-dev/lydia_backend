@@ -1,44 +1,102 @@
-require('dotenv').config();
-import express, { Request, Response } from 'express';
+import dotenv from 'dotenv';
+dotenv.config();
+
+import express, { NextFunction, Request, Response } from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
+
 import { createSupplierController } from './modules/supplier/controllers';
 import { updateSupplierStatusController } from './modules/supplier/controllers/updateSupplierStatusController';
 import { createItemController } from './modules/item/controllers/createItemController';
 import { getItemsBySupplierController } from './modules/item/controllers/getItemsController';
 
-const uri = process.env.MONGODB_URL ?? '';
-if (!uri) {
-    throw new Error('MONGODB_URL environment variable is not set');
+import { requireAuth } from './middlewares';
+import { rateLimiter } from './utils';
+import { ErrorResponse } from './constants';
+
+
+const PORT = process.env.PORT || 3001;
+const AUTH0_DOMAIN = process.env.AUTH0_DOMAIN || '';
+const AUTH0_AUDIENCE = process.env.AUTH0_AUDIENCE || '';
+const MONGODB_URI = process.env.MONGODB_URI || '';
+const NODE_ENV = process.env.NODE_ENV || 'development';
+const { AUTH, GENERIC, NOT_FOUND } = ErrorResponse;
+
+const missingVars = [];
+if (!MONGODB_URI) missingVars.push('MONGODB_URI');
+if (!AUTH0_DOMAIN) missingVars.push('AUTH0_DOMAIN');
+if (!AUTH0_AUDIENCE) missingVars.push('AUTH0_AUDIENCE');
+
+if (missingVars.length > 0) {
+    console.error(`❌ Missing required environment variables: ${missingVars.join(', ')}`);
+    process.exit(1);
 }
 
-const port = process.env.PORT || 3001;
 const app = express();
 
-app.use(cors());
-app.use(express.json());
+const allowedOrigins = [ 'http://localhost:3000' ];
+if (NODE_ENV === 'production') {
+    allowedOrigins.push('https://your-production-frontend.com');
+}
 
-app.post('/api/v1/create-supplier', createSupplierController);
-app.patch('/api/v1/supplier/:id/status', async (req: Request, res: Response, next) => {
+app.use(cors({
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true
+}));
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(rateLimiter);
+
+app.get('/api/v1/health', (req: Request, res: Response): void => {
+    res.status(200).json({ status: 'OK', environment: NODE_ENV });
+});
+
+const apiRouter = express.Router();
+apiRouter.post('/create-supplier', createSupplierController);
+apiRouter.patch('/supplier/:id/status', async (req: Request, res: Response, next: NextFunction) => {
     try {
         await updateSupplierStatusController(req, res);
     } catch (error) {
         next(error);
     }
 });
+apiRouter.post('/create-item', createItemController);
+apiRouter.get('/get-supplier-items', getItemsBySupplierController);
 
-app.post('/api/v1/create-item', createItemController);
-app.get('/api/v1/get-supplier-items', getItemsBySupplierController);
+app.use('/api/v1', requireAuth, apiRouter);
 
-app.get('/api/v1/health', (req: Request, res: Response): void => {
-    res.status(200).send('OK');
+app.use((req: Request, res: Response) => {
+    res.status(NOT_FOUND.statusCode).json({ NOT_FOUND });
+});
+
+app.use((err: any, req: Request, res: any, next: NextFunction) => {
+    if (err.name === 'UnauthorizedError') {
+        return res.status(AUTH.INVALID_TOKEN.statusCode).json({
+            error: AUTH.INVALID_TOKEN
+        });
+    }
+    if (NODE_ENV !== 'production') {
+        console.error('Error:', err);
+    }
+
+    const statusCode = err.statusCode || 500;
+    res.status(statusCode).json({
+        error: NODE_ENV === 'production' ? 'Internal server error' : err.message || 'Internal server error'
+    });
 });
 
 const connectDB = async () => {
     try {
-        await mongoose.connect(uri);
+        await mongoose.connect(MONGODB_URI);
         console.log('✅ Connected to MongoDB with Mongoose');
-        app.listen(port, () => console.log(`🚀 Server running on http://localhost:${port}`));
+        app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
     } catch (err) {
         console.error('❌ Failed to connect to MongoDB:', err);
         process.exit(1);
