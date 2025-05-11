@@ -4,11 +4,11 @@ import { MongooseSupplierRepo } from '../infra/SupplierRepo';
 import { AccountStatus } from '../../../shared/types';
 
 export const updateSupplierStatusController = async (req: Request, res: Response) => {
-    const repo = new MongooseSupplierRepo();
-
     try {
         const { id } = req.params;
         const { status } = req.body;
+
+        const repo = new MongooseSupplierRepo();
 
         if (!Object.values(AccountStatus).includes(status)) {
             return res.status(400).json({ message: 'Invalid status' });

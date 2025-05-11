@@ -1,20 +1,7 @@
 import { Document } from 'mongoose';
-import { AccountStatus, Address, DonationDays, DonationFrequency, Establishment } from "../../../shared/types";
+import { SupplierBase } from './';
 
-export interface SupplierDocument extends Document {
-    name: string;
-    establishment: Establishment;
-    address: Address;
-    phoneNumber: string;
-    emailAddress: string;
-    description?: string;
-    website?: string;
-    coverPicture?: string;
-    status: AccountStatus;
-    donationSchedule: {
-        days: DonationDays[];
-        frequency: DonationFrequency;
-    };
+export interface SupplierDocument extends SupplierBase, Document {
     createdAt: Date;
     updatedAt: Date;
 }

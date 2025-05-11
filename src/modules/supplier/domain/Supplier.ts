@@ -1,28 +1,51 @@
 import { AccountStatus, Address, DonationDays, DonationFrequency, Establishment } from "../../../shared/types";
 
+/**
+ * Represents a food supplier entity in the system
+ */
 export class Supplier {
+    /**
+     * Creates a new Supplier instance
+     */
     constructor(
-        public name: string,
-        public establishment: Establishment,
-        public address: Address,
-        public phoneNumber: string,
-        public emailAddress: string,
-        public donationSchedule: {
+        public readonly name: string,
+        public readonly establishment: Establishment,
+        public readonly address: Address,
+        public readonly phoneNumber: string,
+        public readonly emailAddress: string,
+        public readonly donationSchedule?: {
             days: DonationDays[];
             frequency: DonationFrequency;
         },
-        public description?: string,
-        public website?: string,
-        public coverPicture?: string,
-        public status: AccountStatus = AccountStatus.PENDING,
-        public createdAt: Date = new Date(),
-        public updatedAt: Date = new Date()
+        public readonly description?: string,
+        public readonly website?: string,
+        public readonly coverPicture?: string,
+        public readonly status: AccountStatus = AccountStatus.PENDING,
+        public readonly createdAt: Date = new Date(),
+        public readonly updatedAt: Date = new Date()
     ) {
-        if (!this.name || !this.emailAddress) {
-            throw new Error('Supplier must have a name and email');
+        this.validateSupplier();
+    }
+
+    /**
+     * Validates required supplier fields
+     * @throws Error if validation fails
+     */
+    private validateSupplier(): void {
+        if (!this.name) {
+            throw new Error('Supplier must have a name');
+        }
+
+        if (!this.emailAddress) {
+            throw new Error('Supplier must have an email address');
         }
     }
 
+    /**
+     * Creates a new Supplier entity from data
+     * @param data The supplier data
+     * @returns A new Supplier instance
+     */
     static create(data: Omit<Supplier, 'createdAt' | 'updatedAt' | 'status'>): Supplier {
         return new Supplier(
             data.name,
@@ -37,6 +60,12 @@ export class Supplier {
         );
     }
 
+    /**
+     * Creates a new Supplier with updated fields
+     * @param existingSupplier The supplier to update
+     * @param updates The fields to update
+     * @returns A new Supplier instance with updated fields
+     */
     static update(
         existingSupplier: Supplier,
         updates: Partial<Omit<Supplier, 'createdAt' | 'status'>>
@@ -57,8 +86,14 @@ export class Supplier {
         );
     }
 
+    /**
+     * Creates a new Supplier with an updated status
+     * @param existingSupplier The supplier to update
+     * @param newStatus The new status
+     * @returns A new Supplier instance with updated status
+     */
     static updateStatus(
-        existingSupplier: Omit<Supplier, 'updatedAt' | 'status'>,
+        existingSupplier: Supplier,
         newStatus: AccountStatus
     ): Supplier {
         return new Supplier(
