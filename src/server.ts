@@ -36,7 +36,7 @@ const app = express();
 
 const allowedOrigins = [ 'http://localhost:3000' ];
 if (NODE_ENV === 'production') {
-    allowedOrigins.push('https://your-production-frontend.com');
+    allowedOrigins.push('http://localhost:3000');
 }
 
 app.use(cors({
