@@ -6,17 +6,28 @@ import { createSupplierController } from './modules/supplier/controllers';
 import { updateSupplierStatusController } from './modules/supplier/controllers/updateSupplierStatusController';
 import { createItemController } from './modules/item/controllers/createItemController';
 import { getItemsBySupplierController } from './modules/item/controllers/getItemsController';
+import rateLimit from 'express-rate-limit';
 
-const uri = process.env.MONGODB_URL ?? '';
-if (!uri) {
-    throw new Error('MONGODB_URL environment variable is not set');
+const PORT = process.env.PORT || 3001;
+const MONGODB_URI = process.env.MONGODB_URI ?? '';
+if (!MONGODB_URI) {
+    throw new Error('MONGODB_URI environment variable is not set');
 }
 
-const port = process.env.PORT || 3001;
+const rateLimiter = rateLimit({
+    windowMs: 10 * 60 * 1000,
+    max: 500,
+    standardHeaders: "draft-7",
+    legacyHeaders: false,
+    handler: (req, res, next, options) =>
+        res.status(options.statusCode).send(options.message),
+});
+
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(rateLimiter);
 
 app.post('/api/v1/create-supplier', createSupplierController);
 app.patch('/api/v1/supplier/:id/status', async (req: Request, res: Response, next) => {
@@ -36,9 +47,9 @@ app.get('/api/v1/health', (req: Request, res: Response): void => {
 
 const connectDB = async () => {
     try {
-        await mongoose.connect(uri);
+        await mongoose.connect(MONGODB_URI);
         console.log('✅ Connected to MongoDB with Mongoose');
-        app.listen(port, () => console.log(`🚀 Server running on http://localhost:${port}`));
+        app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
     } catch (err) {
         console.error('❌ Failed to connect to MongoDB:', err);
         process.exit(1);
