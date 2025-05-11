@@ -12,5 +12,11 @@ export const ErrorResponse = {
             statusCode: 401,
             message: "Invalid or missing token",
         },
+    },
+    CORS: {
+        NOT_ALLOWED: {
+            statusCode: 403,
+            message: "Not allowed by CORS",
+        },
     }
 };

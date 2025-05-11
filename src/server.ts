@@ -20,7 +20,7 @@ const AUTH0_DOMAIN = process.env.AUTH0_DOMAIN || '';
 const AUTH0_AUDIENCE = process.env.AUTH0_AUDIENCE || '';
 const MONGODB_URI = process.env.MONGODB_URI || '';
 const NODE_ENV = process.env.NODE_ENV || 'development';
-const { AUTH, GENERIC, NOT_FOUND } = ErrorResponse;
+const { AUTH, CORS, GENERIC, NOT_FOUND } = ErrorResponse;
 
 const missingVars = [];
 if (!MONGODB_URI) missingVars.push('MONGODB_URI');
@@ -44,7 +44,7 @@ app.use(cors({
         if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
-            callback(new Error('Not allowed by CORS'));
+            callback(new Error(CORS.NOT_ALLOWED.message));
         }
     },
     credentials: true
@@ -88,7 +88,7 @@ app.use((err: any, req: Request, res: any, next: NextFunction) => {
 
     const statusCode = err.statusCode || 500;
     res.status(statusCode).json({
-        error: NODE_ENV === 'production' ? 'Internal server error' : err.message || 'Internal server error'
+        error: NODE_ENV === 'production' ? GENERIC.message : err.message || GENERIC.message
     });
 });
 
