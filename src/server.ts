@@ -7,9 +7,12 @@ import { updateSupplierStatusController } from './modules/supplier/controllers/u
 import { createItemController } from './modules/item/controllers/createItemController';
 import { getItemsBySupplierController } from './modules/item/controllers/getItemsController';
 import rateLimit from 'express-rate-limit';
+import { auth, requiredScopes } from 'express-oauth2-jwt-bearer';
 
 const PORT = process.env.PORT || 3001;
-const MONGODB_URI = process.env.MONGODB_URI ?? '';
+const AUTH0_DOMAIN = process.env.AUTH0_DOMAIN || '';
+const AUTH0_AUDIENCE = process.env.AUTH0_AUDIENCE || '';
+const MONGODB_URI = process.env.MONGODB_URI || '';
 if (!MONGODB_URI) {
     throw new Error('MONGODB_URI environment variable is not set');
 }
@@ -29,17 +32,21 @@ app.use(cors());
 app.use(express.json());
 app.use(rateLimiter);
 
-app.post('/api/v1/create-supplier', createSupplierController);
-app.patch('/api/v1/supplier/:id/status', async (req: Request, res: Response, next) => {
+const checkJwt = auth({
+    audience: AUTH0_AUDIENCE,
+    issuerBaseURL: AUTH0_DOMAIN,
+});
+
+app.post('/api/v1/create-supplier', checkJwt, createSupplierController);
+app.patch('/api/v1/supplier/:id/status', checkJwt, async (req: Request, res: Response, next) => {
     try {
         await updateSupplierStatusController(req, res);
     } catch (error) {
         next(error);
     }
 });
-
-app.post('/api/v1/create-item', createItemController);
-app.get('/api/v1/get-supplier-items', getItemsBySupplierController);
+app.post('/api/v1/create-item', checkJwt, createItemController);
+app.get('/api/v1/get-supplier-items', checkJwt, getItemsBySupplierController);
 
 app.get('/api/v1/health', (req: Request, res: Response): void => {
     res.status(200).send('OK');
