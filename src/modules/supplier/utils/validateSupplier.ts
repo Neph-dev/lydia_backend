@@ -2,7 +2,7 @@ import { ErrorResponse } from "../../../constants";
 import { AppError } from "../../../utils";
 import { SupplierBase } from "../types";
 
-const { SUPPLIER } = ErrorResponse;
+const { FIELDS } = ErrorResponse;
 
 export const validateSupplier = (fields: SupplierBase): void => {
     const missingFields: string[] = [];
@@ -35,8 +35,8 @@ export const validateSupplier = (fields: SupplierBase): void => {
     if (missingFields.length > 0) {
         throw new AppError(
             `The following required fields are missing: ${missingFields.join(', ')}`,
-            SUPPLIER.FIELDS.MISSING_FIELDS.code,
-            SUPPLIER.FIELDS.MISSING_FIELDS.statusCode
+            FIELDS.MISSING_FIELDS.code,
+            FIELDS.MISSING_FIELDS.statusCode
         );
     }
 };

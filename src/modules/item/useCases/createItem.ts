@@ -6,7 +6,7 @@ export const createItem = async (
     itemRepo: ItemRepo
 ): Promise<Item> => {
     const item = Item.create(dto);
-
     await itemRepo.save(item);
+
     return item;
 };

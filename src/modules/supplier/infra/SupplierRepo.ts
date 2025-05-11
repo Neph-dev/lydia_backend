@@ -2,6 +2,7 @@ import { SupplierModel } from './SupplierModel';
 import { Supplier } from '../domain/Supplier';
 import { SupplierRepo } from '../types';
 import { AccountStatus } from '../../../shared/types';
+import { executeDatabaseOperation } from '../../../shared/utils';
 
 export class MongooseSupplierRepo implements SupplierRepo {
     async save(supplier: Supplier): Promise<void> {
@@ -13,7 +14,7 @@ export class MongooseSupplierRepo implements SupplierRepo {
     }
 
     async findByEmail(email: string): Promise<Supplier | null> {
-        return this.executeDatabaseOperation(async () => {
+        return executeDatabaseOperation(async () => {
             if (!email) return null;
             const doc = await SupplierModel.findOne({ emailAddress: email });
             return this.documentToSupplier(doc);
@@ -21,7 +22,7 @@ export class MongooseSupplierRepo implements SupplierRepo {
     }
 
     async findById(id: string): Promise<Supplier | null> {
-        return this.executeDatabaseOperation(async () => {
+        return executeDatabaseOperation(async () => {
             if (!id) return null;
             const doc = await SupplierModel.findById(id);
             return this.documentToSupplier(doc);
@@ -29,7 +30,7 @@ export class MongooseSupplierRepo implements SupplierRepo {
     }
 
     async updateStatus(id: string, supplier: Supplier, newStatus: AccountStatus): Promise<Supplier | null> {
-        return this.executeDatabaseOperation(async () => {
+        return executeDatabaseOperation(async () => {
             if (!supplier) return null;
             const updatedSupplier = await SupplierModel.findByIdAndUpdate(
                 id,
@@ -56,17 +57,5 @@ export class MongooseSupplierRepo implements SupplierRepo {
             doc.status,
             doc.createdAt
         );
-    }
-
-    private async executeDatabaseOperation<T>(
-        operation: () => Promise<T>,
-        operationName: string
-    ): Promise<T> {
-        try {
-            return await operation();
-        } catch (error) {
-            console.error(`Database error in ${operationName}: ${error instanceof Error ? error.message : 'Unknown error'}`);
-            throw new Error(`Failed to ${operationName.replace(/([A-Z])/g, ' $1').toLowerCase()}: ${error instanceof Error ? error.message : 'Database connection issue'}`);
-        }
     }
 }

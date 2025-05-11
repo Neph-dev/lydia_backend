@@ -1,16 +1,6 @@
-import mongoose from "mongoose";
-import { ItemType } from "./ItemType";
-import { CategoryType } from "./CategoryType";
+import { ItemBase } from "./";
 
-export interface CreateItemDTO {
-    supplierId: mongoose.Types.ObjectId;
-    name: string;
-    type: ItemType;
-    category: CategoryType;
-    quantity: number;
-    bestBefore: Date;
-    readyBy: Date;
-    description: string;
-    claimedBy?: mongoose.Types.ObjectId;
-    images?: mongoose.Types.ObjectId[];
-}
+/**
+ * Data Transfer Object for creating items
+ */
+export interface CreateItemDTO extends ItemBase { }

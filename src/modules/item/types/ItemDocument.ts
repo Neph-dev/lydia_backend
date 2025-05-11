@@ -1,18 +1,8 @@
-import mongoose, { Document } from 'mongoose';
-import { CategoryType, ItemStatus, ItemType } from "../types";
+import { Document } from 'mongoose';
+import { ItemBase, ItemStatus } from "../types";
 
-export interface ItemDocument extends Document {
-    supplierId: mongoose.Types.ObjectId;
-    name: string;
-    type: ItemType;
-    quantity: number;
-    category: CategoryType;
-    bestBefore: Date;
-    readyBy: Date;
-    description: string;
-    claimedBy?: mongoose.Types.ObjectId;
+export interface ItemDocument extends ItemBase, Document {
     status: ItemStatus;
-    images?: mongoose.Types.ObjectId[];
     createdAt: Date;
     updatedAt: Date;
 }
