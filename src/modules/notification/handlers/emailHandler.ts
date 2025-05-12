@@ -13,7 +13,7 @@ export const sendEmail = async (options: EmailOptions): Promise<boolean> => {
         }
 
         await transporter.sendMail({
-            from: process.env.EMAIL_FROM || 'noreply@lydia.com',
+            from: '"Lydia" <noreply@brickous.com>',
             to: options.to,
             subject: options.subject,
             text: options.text,

@@ -13,9 +13,30 @@ export const createOrder = async (
 ): Promise<Order> => {
     await validateOrder(dto, itemRepo);
 
-    const order = Order.create(dto);
-    await orderRepo.save(order);
+    const populatedItems = await Promise.all(
+        dto.items.map(async (orderItem) => {
+            const itemId = orderItem.itemId.toString();
+            const item = await itemRepo.findById(itemId);
 
+            if (!item) {
+                throw new Error(`Item with ID ${itemId} not found`);
+            }
+
+            return {
+                ...orderItem,
+                itemDetails: {
+                    name: item.name
+                }
+            };
+        })
+    );
+    const orderWithDetails = {
+        ...dto,
+        items: populatedItems
+    };
+
+    const order = Order.create(orderWithDetails);
+    await orderRepo.save(order);
 
     await Promise.all(dto.items.map(async (orderItem) => {
         const itemId = orderItem.itemId.toString();
@@ -25,13 +46,18 @@ export const createOrder = async (
             const newQuantity = item.quantity - orderItem.quantity;
 
             if (newQuantity <= 0) {
-                await itemRepo.updateStatus(itemId, item, ItemStatus.UNAVAILABLE);
-            } else {
                 const updatedItem = Item.update(item, {
                     quantity: newQuantity
                 });
                 await itemRepo.update(itemId, updatedItem);
-                await itemRepo.updateStatus(itemId, updatedItem, ItemStatus.CLAIMED);
+                await itemRepo.updateStatus(itemId, item, ItemStatus.UNAVAILABLE);
+            }
+            else {
+                const updatedItem = Item.update(item, {
+                    quantity: newQuantity
+                });
+                await itemRepo.update(itemId, updatedItem);
+                await itemRepo.updateStatus(itemId, updatedItem, ItemStatus.AVAILABLE);
             }
         }
     }));

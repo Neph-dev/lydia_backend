@@ -9,7 +9,7 @@ import { Item } from '../../item/domain/Item';
  * Generates an email template for order creation notification
  */
 export const generateOrderPlacedTemplate = (supplier: Supplier, order: Order): string => {
-    return `
+  return `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 5px;">
       <h1 style="color: #4a6f8a;">New Order Received</h1>
       <p>Hello ${supplier.name},</p>
@@ -31,7 +31,7 @@ export const generateOrderPlacedTemplate = (supplier: Supplier, order: Order): s
  * Generates an email template for item status change notification
  */
 export const generateItemStatusUpdateTemplate = (beneficiary: Beneficiary, item: Item, oldStatus: ItemStatus, newStatus: ItemStatus): string => {
-    return `
+  return `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 5px;">
       <h1 style="color: #4a6f8a;">Item Status Update</h1>
       <p>Hello ${beneficiary.name},</p>
@@ -50,7 +50,7 @@ export const generateItemStatusUpdateTemplate = (beneficiary: Beneficiary, item:
  * Generates an email template for order status update notification
  */
 export const generateOrderStatusUpdateTemplate = (beneficiary: Beneficiary, order: Order, oldStatus: OrderStatus, newStatus: OrderStatus): string => {
-    return `
+  return `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 5px;">
       <h1 style="color: #4a6f8a;">Order Status Update</h1>
       <p>Hello ${beneficiary.name},</p>
