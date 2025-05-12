@@ -1,5 +1,7 @@
+import { ErrorResponse } from "../../../constants";
+import { AppError } from "../../../utils";
+import { transporter } from "../config";
 import { EmailOptions } from "../types";
-import { transporter } from "../utils";
 
 /**
  * Sends an email notification
@@ -7,9 +9,31 @@ import { transporter } from "../utils";
  * @returns Promise resolving to sending result
  */
 export const sendEmail = async (options: EmailOptions): Promise<boolean> => {
+    const { NOTIFICATION } = ErrorResponse;
+
     try {
+        if (!options.to) {
+            throw new AppError(
+                NOTIFICATION.FIELDS.EMAIL_RECIPIENT_MISSING.message,
+                NOTIFICATION.FIELDS.EMAIL_RECIPIENT_MISSING.code,
+                NOTIFICATION.FIELDS.EMAIL_RECIPIENT_MISSING.statusCode
+            );
+        }
+
+        if (!options.subject) {
+            throw new AppError(
+                NOTIFICATION.FIELDS.EMAIL_SUBJECT_MISSING.message,
+                NOTIFICATION.FIELDS.EMAIL_SUBJECT_MISSING.code,
+                NOTIFICATION.FIELDS.EMAIL_SUBJECT_MISSING.statusCode
+            );
+        }
+
         if (!options.text && !options.html) {
-            throw new Error('Either text or html content must be provided');
+            throw new AppError(
+                NOTIFICATION.FIELDS.EMAIL_CONTENT_MISSING.message,
+                NOTIFICATION.FIELDS.EMAIL_CONTENT_MISSING.code,
+                NOTIFICATION.FIELDS.EMAIL_CONTENT_MISSING.statusCode
+            );
         }
 
         await transporter.sendMail({

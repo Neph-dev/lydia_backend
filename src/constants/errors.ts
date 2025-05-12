@@ -125,5 +125,34 @@ export const ErrorResponse = {
             code: "ORDER_DUPLICATE_ORDER_ID",
             statusCode: 409,
         }
+    },
+    NOTIFICATION: {
+        EMAIL: {
+            message: "Failed to send email",
+            code: "NOTIFICATION_EMAIL_FAILED",
+            statusCode: 500,
+        },
+        FIELDS: {
+            EMAIL_SUBJECT_MISSING: {
+                message: "Subject is required",
+                code: "NOTIFICATION_SUBJECT_MISSING",
+                statusCode: 400,
+            },
+            EMAIL_CONTENT_MISSING: {
+                message: "Email must have either text or HTML content",
+                code: "NOTIFICATION_CONTENT_MISSING",
+                statusCode: 400,
+            },
+            EMAIL_SENDER_MISSING: {
+                message: "Sender email is required",
+                code: "NOTIFICATION_SENDER_MISSING",
+                statusCode: 400,
+            },
+            EMAIL_RECIPIENT_MISSING: {
+                message: "Recipient email is required",
+                code: "NOTIFICATION_RECIPIENT_MISSING",
+                statusCode: 400,
+            },
+        }
     }
 };

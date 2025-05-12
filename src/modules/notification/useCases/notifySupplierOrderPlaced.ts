@@ -1,7 +1,7 @@
 import { Order } from '../../order/domain/Order';
 import { MongooseSupplierRepo } from '../../supplier/infra/SupplierRepo';
 import { sendEmail } from '../handlers/emailHandler';
-import { generateOrderPlacedTemplate } from '../templates';
+import { generateOrderPlacedTemplate } from '../templates/generateOrderPlacedTemplate';
 
 /**
  * Sends a notification to a supplier when an order is placed

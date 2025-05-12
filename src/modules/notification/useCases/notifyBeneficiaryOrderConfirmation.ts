@@ -1,10 +1,9 @@
 import { Order } from '../../order/domain/Order';
-import { Item } from '../../item/domain/Item';
 import { MongooseBeneficiaryRepo } from '../../beneficiary/infra/BenefiaciaryRepo';
 import { MongooseSupplierRepo } from '../../supplier/infra/SupplierRepo';
 import { MongooseItemRepo } from '../../item/infra/ItemRepo';
 import { sendEmail } from '../handlers/emailHandler';
-import { generateBeneficiaryOrderConfirmationTemplate } from '../templates';
+import { generateBeneficiaryOrderConfirmationTemplate } from '../templates/generateBeneficiaryOrderConfirmationTemplate';
 
 export const notifyBeneficiaryOrderConfirmation = async (order: Order): Promise<boolean> => {
     try {

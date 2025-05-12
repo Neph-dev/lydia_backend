@@ -62,11 +62,19 @@ export const createOrder = async (
         }
     }));
 
-    notifySupplierOrderPlaced(order)
-        .catch(error => console.error('Failed to send order notification:', error));
+    const sendNotifications = async () => {
+        try {
+            await Promise.all([
+                notifySupplierOrderPlaced(order),
+                notifyBeneficiaryOrderConfirmation(order)
+            ]);
+        } catch (error) {
+            console.error('Failed to send order notifications:',
+                error instanceof Error ? error.message : 'Unknown error');
+        }
+    };
 
-    notifyBeneficiaryOrderConfirmation(order)
-        .catch(error => console.error('Failed to send beneficiary order confirmation:', error));
+    sendNotifications();
 
     return order;
 };

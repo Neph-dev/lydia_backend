@@ -1,8 +1,8 @@
 import { Item } from '../../item/domain/Item';
 import { ItemStatus } from '../../item/types';
 import { MongooseBeneficiaryRepo } from '../../beneficiary/infra/BenefiaciaryRepo';
-import { generateItemStatusUpdateTemplate } from '../templates';
 import { sendEmail } from '../handlers/emailHandler';
+import { generateItemStatusUpdateTemplate } from '../templates/generateItemStatusUpdateTemplate';
 
 /**
  * Sends a notification to a beneficiary when an item's status changes
