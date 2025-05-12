@@ -1,4 +1,4 @@
-import mongoose, { Schema } from 'mongoose';;
+import mongoose, { Schema } from 'mongoose';
 import { ItemDocument, ItemStatus } from '../types';
 
 const ItemSchema = new Schema<ItemDocument>({
@@ -44,7 +44,7 @@ const ItemSchema = new Schema<ItemDocument>({
         required: true
     },
     claimedBy: {
-        type: Schema.Types.ObjectId,
+        type: [ Schema.Types.ObjectId ],
         ref: 'Beneficiary'
     },
     status: {

@@ -108,5 +108,22 @@ export const ErrorResponse = {
             code: "ITEM_FETCH_FAILED",
             statusCode: 500,
         }
+    },
+    ORDER: {
+        ITEMS_UNAVAILABLE: {
+            message: "One or more items are not available",
+            code: "ORDER_ITEMS_UNAVAILABLE",
+            statusCode: 400,
+        },
+        NOT_FOUND: {
+            message: "Order with id :id not found",
+            code: "ORDER_NOT_FOUND",
+            statusCode: 404,
+        },
+        DUPLICATE_ORDER_ID: {
+            message: "Order with this orderId already exists",
+            code: "ORDER_DUPLICATE_ORDER_ID",
+            statusCode: 409,
+        }
     }
 };

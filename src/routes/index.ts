@@ -4,6 +4,7 @@ import { updateSupplierStatusController } from '../modules/supplier/controllers/
 import { createItemController } from '../modules/item/controllers/createItemController';
 import { getItemsBySupplierController } from '../modules/item/controllers/getItemsController';
 import { createBeneficiaryController, updateBeneficiaryStatusController } from '../modules/beneficiary/controllers';
+import { createOrderController } from '../modules/order/controllers';
 
 const apiRouter = express.Router();
 
@@ -61,6 +62,17 @@ apiRouter.post('/create-item', async (req: Request, res: Response, next: NextFun
 apiRouter.get('/get-supplier-items', async (req: Request, res: Response, next: NextFunction) => {
     try {
         await getItemsBySupplierController(req, res);
+    } catch (error) {
+        next(error);
+    }
+});
+
+/**
+ * Order routes
+ */
+apiRouter.post('/create-order', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        await createOrderController(req, res);
     } catch (error) {
         next(error);
     }

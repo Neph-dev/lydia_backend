@@ -14,6 +14,6 @@ export interface ItemBase {
     bestBefore: Date;
     readyBy: Date;
     description: string;
-    claimedBy?: mongoose.Types.ObjectId;
+    claimedBy?: mongoose.Types.ObjectId[];
     images?: mongoose.Types.ObjectId[];
 }
