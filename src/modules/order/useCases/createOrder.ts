@@ -1,6 +1,6 @@
 import { Item } from '../../item/domain';
 import { ItemRepo, ItemStatus } from '../../item/types';
-import { notifySupplierOrderPlaced } from '../../notification/useCases';
+import { notifyBeneficiaryOrderConfirmation, notifySupplierOrderPlaced } from '../../notification/useCases';
 import { Order } from '../domain';
 import { CreateOrderDTO } from '../types/CreateOrderDTO';
 import { OrderRepo } from '../types/OrderRepo';
@@ -64,6 +64,9 @@ export const createOrder = async (
 
     notifySupplierOrderPlaced(order)
         .catch(error => console.error('Failed to send order notification:', error));
+
+    notifyBeneficiaryOrderConfirmation(order)
+        .catch(error => console.error('Failed to send beneficiary order confirmation:', error));
 
     return order;
 };
