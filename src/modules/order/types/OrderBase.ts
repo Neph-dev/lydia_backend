@@ -8,5 +8,6 @@ export interface OrderBase {
     beneficiaryId: mongoose.Types.ObjectId;
     items: OrderItem[];
     orderDate: Date;
+    orderCode: string;
     status: OrderStatus;
 }

@@ -12,6 +12,10 @@ const OrderSchema = new Schema<OrderDocument>({
         ref: 'Beneficiary',
         required: true
     },
+    orderCode: {
+        type: String,
+        required: true
+    },
     items: [
         {
             itemId: {

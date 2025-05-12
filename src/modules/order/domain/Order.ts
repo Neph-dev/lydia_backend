@@ -1,25 +1,29 @@
 import mongoose from "mongoose";
 import { OrderItem, OrderStatus } from "../types";
+import { generateOrderCode, generateOrderId } from "../utils";
 
 export class Order {
     constructor(
-        public readonly orderId: string,
+        public readonly orderId: string = generateOrderId(),
         public readonly supplierId: mongoose.Types.ObjectId,
         public readonly beneficiaryId: mongoose.Types.ObjectId,
         public readonly items: OrderItem[],
         public readonly orderDate: Date = new Date(),
+        public readonly orderCode: string = generateOrderCode(),
         public readonly status: OrderStatus = OrderStatus.CREATED,
         public readonly createdAt: Date = new Date(),
         public readonly updatedAt: Date = new Date()
     ) { }
 
-    static create(data: Omit<Order, 'createdAt' | 'updatedAt' | 'status'>): Order {
+
+    static create(data: Omit<Order, 'createdAt' | 'updatedAt' | 'status' | 'orderId' | 'orderCode'>): Order {
         return new Order(
-            data.orderId,
+            generateOrderId(),
             data.supplierId,
             data.beneficiaryId,
             data.items,
-            data.orderDate
+            data.orderDate,
+            generateOrderCode(),
         );
     }
 
@@ -33,6 +37,7 @@ export class Order {
             existingOrder.beneficiaryId,
             existingOrder.items,
             existingOrder.orderDate,
+            existingOrder.orderCode,
             newStatus,
             existingOrder.createdAt,
             new Date()
@@ -49,6 +54,7 @@ export class Order {
             updates.beneficiaryId ?? existingOrder.beneficiaryId,
             updates.items ?? existingOrder.items,
             updates.orderDate ?? existingOrder.orderDate,
+            existingOrder.orderCode,
             existingOrder.status,
             existingOrder.createdAt,
             new Date()
