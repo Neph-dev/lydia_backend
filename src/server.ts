@@ -5,11 +5,7 @@ import express, { NextFunction, Request, Response } from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 
-import { createSupplierController } from './modules/supplier/controllers';
-import { updateSupplierStatusController } from './modules/supplier/controllers/updateSupplierStatusController';
-import { createItemController } from './modules/item/controllers/createItemController';
-import { getItemsBySupplierController } from './modules/item/controllers/getItemsController';
-
+import apiRouter from './routes';
 import { requireAuth } from './middlewares';
 import { rateLimiter } from './utils';
 import { ErrorResponse } from './constants';
@@ -57,18 +53,6 @@ app.use(rateLimiter);
 app.get('/api/v1/health', (req: Request, res: Response): void => {
     res.status(200).json({ status: 'OK', environment: NODE_ENV });
 });
-
-const apiRouter = express.Router();
-apiRouter.post('/create-supplier', createSupplierController);
-apiRouter.patch('/supplier/:id/status', async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        await updateSupplierStatusController(req, res);
-    } catch (error) {
-        next(error);
-    }
-});
-apiRouter.post('/create-item', createItemController);
-apiRouter.get('/get-supplier-items', getItemsBySupplierController);
 
 app.use('/api/v1', requireAuth, apiRouter);
 
