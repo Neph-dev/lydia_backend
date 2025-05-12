@@ -36,6 +36,11 @@ export const ErrorResponse = {
             statusCode: 400,
         },
     },
+    INVALID_STATUS: {
+        message: "Invalid status",
+        code: "INVALID_STATUS",
+        statusCode: 400,
+    },
     SUPPLIER: {
         DUPLICATE_EMAIL: {
             message: "Supplier with this email already exists",
@@ -55,6 +60,28 @@ export const ErrorResponse = {
         UPDATE_STATUS: {
             message: "Failed to update supplier status",
             code: "SUPPLIER_UPDATE_STATUS",
+            statusCode: 500,
+        }
+    },
+    BENEFICIARY: {
+        DUPLICATE_EMAIL: {
+            message: "Beneficiary with this email already exists",
+            code: "BENEFICIARY_DUPLICATE_EMAIL",
+            statusCode: 409,
+        },
+        NOT_FOUND: {
+            message: "Beneficiary with id :id not found",
+            code: "BENEFICIARY_NOT_FOUND",
+            statusCode: 404,
+        },
+        SAME_STATUS: {
+            message: "Beneficiary already has status :status",
+            code: "SAME_STATUS",
+            statusCode: 409,
+        },
+        UPDATE_STATUS: {
+            message: "Failed to update Beneficiary status",
+            code: "BENEFICIARY_UPDATE_STATUS",
             statusCode: 500,
         }
     },

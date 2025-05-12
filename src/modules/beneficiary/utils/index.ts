@@ -1,0 +1,1 @@
+export { validateBeneficiary } from './validateBeneficiary';

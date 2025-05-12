@@ -3,6 +3,7 @@ import { createSupplierController } from '../modules/supplier/controllers';
 import { updateSupplierStatusController } from '../modules/supplier/controllers/updateSupplierStatusController';
 import { createItemController } from '../modules/item/controllers/createItemController';
 import { getItemsBySupplierController } from '../modules/item/controllers/getItemsController';
+import { createBeneficiaryController, updateBeneficiaryStatusController } from '../modules/beneficiary/controllers';
 
 const apiRouter = express.Router();
 
@@ -24,6 +25,27 @@ apiRouter.patch('/supplier/:id/status', async (req: Request, res: Response, next
         next(error);
     }
 });
+
+
+/**
+ * Beneficiary routes
+ */
+apiRouter.post('/create-beneficiary', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        await createBeneficiaryController(req, res);
+    } catch (error) {
+        next(error);
+    }
+});
+
+apiRouter.patch('/beneficiary/:id/status', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        await updateBeneficiaryStatusController(req, res);
+    } catch (error) {
+        next(error);
+    }
+});
+
 
 /**
  * Item routes
