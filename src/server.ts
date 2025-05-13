@@ -1,15 +1,17 @@
 import dotenv from 'dotenv';
 dotenv.config();
+globalThis.crypto ??= require("node:crypto").webcrypto;
 
 import express, { NextFunction, Request, Response } from 'express';
 import cors from 'cors';
+import helmet from 'helmet';
 import mongoose from 'mongoose';
+import { createLogger, format, transports } from 'winston';
 
 import apiRouter from './routes';
 import { requireAuth } from './middlewares';
-import { rateLimiter } from './utils';
+import { logger, rateLimiter, verifyEmailConnection } from './utils';
 import { ErrorResponse } from './constants';
-
 
 const PORT = process.env.PORT || 3001;
 const AUTH0_DOMAIN = process.env.AUTH0_DOMAIN || '';
@@ -30,10 +32,22 @@ if (missingVars.length > 0) {
 
 const app = express();
 
+app.use(helmet());
+
 const allowedOrigins = [ 'http://localhost:3000' ];
 if (NODE_ENV === 'production') {
-    allowedOrigins.push('http://localhost:3000');
+    allowedOrigins.push('');
 }
+
+// ! Uncomment the following lines to enforce HTTPS in production
+// app.use((req, res, next) => {
+//     if (process.env.NODE_ENV === 'production' && !req.secure) {
+//         if (req.headers[ 'x-forwarded-proto' ] !== 'https') {
+//             return res.redirect(`https://${req.headers.host}${req.url}`);
+//         }
+//     }
+//     next();
+// });
 
 app.use(cors({
     origin: (origin, callback) => {
@@ -50,8 +64,68 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(rateLimiter);
 
-app.get('/api/v1/health', (req: Request, res: Response): void => {
-    res.status(200).json({ status: 'OK', environment: NODE_ENV });
+app.get('/api/v1/health', async (req: Request, res: Response): Promise<void> => {
+    try {
+        const dbStatus = mongoose.connection.db ? await mongoose.connection.db.admin().ping() : false;
+        const emailStatus = await verifyEmailConnection();
+
+        res.status(200).json({
+            status: 'OK',
+            environment: NODE_ENV,
+            database: dbStatus ? 'connected' : 'error',
+            emailService: emailStatus ? 'configured' : 'error',
+            uptime: process.uptime()
+        });
+    } catch (error) {
+        res.status(500).json({ status: 'ERROR', message: 'Health check failed' });
+    }
+});
+
+app.use((req: Request, res: Response, next: NextFunction) => {
+    const start = Date.now();
+    const requestId = req.headers[ 'x-request-id' ] || crypto.randomUUID();
+
+    res.setHeader('X-Request-ID', requestId);
+
+    logger.info('Request received', {
+        requestId,
+        method: req.method,
+        path: req.path,
+        query: req.query,
+        ip: req.ip,
+        userAgent: req.get('User-Agent'),
+        referrer: req.get('Referrer') || req.get('Referer'),
+        hasAuth: !!req.headers.authorization
+    });
+
+    res.on('finish', () => {
+        const duration = Date.now() - start;
+
+        const level = res.statusCode >= 500 ? 'error' :
+            res.statusCode >= 400 ? 'warn' : 'info';
+
+        logger[ level ]('Request completed', {
+            requestId,
+            method: req.method,
+            path: req.path,
+            statusCode: res.statusCode,
+            duration,
+            contentLength: res.get('Content-Length'),
+            userId: req.auth?.payload.sub
+        });
+
+        if (res.statusCode === 401 || res.statusCode === 403) {
+            logger.warn('Security event: Authorization failure', {
+                requestId,
+                method: req.method,
+                path: req.path,
+                ip: req.ip,
+                userId: req.auth?.payload?.sub || 'unauthenticated'
+            });
+        }
+    });
+
+    next();
 });
 
 app.use('/api/v1', requireAuth, apiRouter);
@@ -78,7 +152,15 @@ app.use((err: any, req: Request, res: any, next: NextFunction) => {
 
 const connectDB = async () => {
     try {
-        await mongoose.connect(MONGODB_URI);
+        await mongoose.connect(MONGODB_URI, {
+            maxPoolSize: 10,
+            minPoolSize: 2,
+            serverSelectionTimeoutMS: 7000,
+            socketTimeoutMS: 45000,
+            // ! Uncomment the following lines to enforce SSL in production
+            // ssl: process.env.NODE_ENV === 'production',
+            // tlsAllowInvalidCertificates: false
+        });
         console.log('✅ Connected to MongoDB with Mongoose');
         app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
     } catch (err) {
