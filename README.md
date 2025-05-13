@@ -2,7 +2,7 @@
 
 ## Mission
 
-Lydia is a platform designed to connect restaurants and food suppliers with charitable organizations to reduce food waste and help those in need. By facilitating the donation of excess food that would otherwise go to waste, Lydia serves as a bridge between abundance and scarcity—ensuring that perfectly good food reaches people experiencing food insecurity rather than landfills.
+Lydia is a platform designed to connect restaurants and food suppliers with charitable organizations to reduce food waste and help those in need. By facilitating the donation of excess food that would otherwise go to waste, Lydia serves as a bridge between abundance and scarcity ensuring that perfectly good food reaches people experiencing food insecurity rather than landfills.
 
 ## Overview
 
@@ -85,7 +85,7 @@ EMAIL_HOST=smtp.example.com
 EMAIL_PORT=465
 EMAIL_USER=your-email@example.com
 EMAIL_PASSWORD=your-email-password
-EMAIL_FROM=noreply@lydia.com
+EMAIL_FROM=noreply@brickous.com
 EMAIL_SECURE=true
 ```
 
