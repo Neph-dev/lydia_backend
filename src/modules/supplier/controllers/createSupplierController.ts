@@ -6,8 +6,11 @@ import { ErrorResponse } from '../../../constants';
 
 export const createSupplierController = async (req: Request, res: Response) => {
     const { GENERIC } = ErrorResponse;
+    const sub = req.auth?.payload.sub;
+
     try {
         const repo = new MongooseSupplierRepo();
+        req.body.sub = sub;
 
         const supplier = await createSupplier(req.body, repo);
         res.status(201).json({

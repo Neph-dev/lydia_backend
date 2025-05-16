@@ -41,10 +41,19 @@ export class MongooseSupplierRepo implements SupplierRepo {
         }, 'updateStatus');
     }
 
+    async findBySub(sub: string): Promise<Supplier | null> {
+        return executeDatabaseOperation(async () => {
+            if (!sub) return null;
+            const doc = await SupplierModel.findOne({ sub });
+            return this.documentToSupplier(doc);
+        }, 'findBySub');
+    }
+
     private documentToSupplier(doc: any): Supplier | null {
         if (!doc) return null;
 
         return new Supplier(
+            doc.sub,
             doc.name,
             doc.establishment,
             doc.address,

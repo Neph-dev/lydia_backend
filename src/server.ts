@@ -6,10 +6,8 @@ import express, { NextFunction, Request, Response } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import mongoose from 'mongoose';
-import { createLogger, format, transports } from 'winston';
 
 import apiRouter from './routes';
-import { requireAuth } from './middlewares';
 import { logger, rateLimiter, verifyEmailConnection } from './utils';
 import { ErrorResponse } from './constants';
 
@@ -128,7 +126,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
     next();
 });
 
-app.use('/api/v1', requireAuth, apiRouter);
+app.use('/api/v1', apiRouter);
 
 app.use((req: Request, res: Response) => {
     res.status(NOT_FOUND.statusCode).json({ NOT_FOUND });

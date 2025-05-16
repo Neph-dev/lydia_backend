@@ -6,4 +6,5 @@ export interface SupplierRepo {
     findByEmail(email: string): Promise<Supplier | null>;
     findById(id: string): Promise<Supplier | null>;
     updateStatus(id: string, supplier: Supplier, newStatus: AccountStatus): Promise<Supplier | null>;
+    findBySub(sub: string): Promise<Supplier | null>;
 }

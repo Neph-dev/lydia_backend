@@ -5,13 +5,35 @@ export const ErrorResponse = {
     },
     NOT_FOUND: {
         statusCode: 404,
+        code: "NOT_FOUND",
         message: "Resource not found",
     },
     AUTH: {
+        GENERIC: {
+            statusCode: 500,
+            code: "AUTH_GENERIC",
+            message: "Authentication error",
+        },
         INVALID_TOKEN: {
             statusCode: 401,
+            code: "INVALID_TOKEN",
             message: "Invalid or missing token",
         },
+        AUTH_REQUIRED: {
+            statusCode: 401,
+            code: "AUTH_REQUIRED",
+            message: "Authentication required",
+        },
+        ONBOARDING_REQUIRED: {
+            statusCode: 401,
+            code: "ONBOARDING_REQUIRED",
+            message: "Onboarding required",
+        },
+        SUPPLIER_NOT_FOUND: {
+            statusCode: 404,
+            code: "SUPPLIER_NOT_FOUND",
+            message: "Supplier not found",
+        }
     },
     CORS: {
         NOT_ALLOWED: {

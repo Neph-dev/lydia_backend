@@ -5,6 +5,7 @@ import { AccountStatus, Address, DonationDays, DonationFrequency, Establishment 
  * It includes common properties that are shared across different supplier-related operations.
  */
 export interface SupplierBase {
+    sub: string;
     name: string;
     establishment: Establishment;
     address: Address;

@@ -1,1 +1,11 @@
-export type Establishment = 'restaurant' | 'cafe' | 'bar' | 'pub' | 'club' | 'hotel' | 'bakery' | 'butcher' | 'grocery' | 'supermarket' | 'market' | 'farmers market';
+export type Establishment = 'restaurant'
+    | 'Cafe'
+    | 'Bar'
+    | 'Hotel'
+    | 'Bakery'
+    | 'Butcher'
+    | 'Grocery'
+    | 'Supermarket'
+    | 'Market'
+    | 'Farmers Market'
+    | 'Food Producer'; 

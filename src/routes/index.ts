@@ -1,17 +1,19 @@
 import express, { NextFunction, Request, Response } from 'express';
-import { createSupplierController } from '../modules/supplier/controllers';
+import { createSupplierController, getSupplierProfileController } from '../modules/supplier/controllers';
 import { updateSupplierStatusController } from '../modules/supplier/controllers/updateSupplierStatusController';
 import { createItemController } from '../modules/item/controllers/createItemController';
 import { getItemsBySupplierController } from '../modules/item/controllers/getItemsController';
 import { createBeneficiaryController, updateBeneficiaryStatusController } from '../modules/beneficiary/controllers';
 import { createOrderController } from '../modules/order/controllers';
+import { requireAuth } from '../middlewares';
+import { requireSupplier } from '../middlewares/checkSupplierExists';
 
 const apiRouter = express.Router();
 
 /**
  * Supplier routes
  */
-apiRouter.post('/create-supplier', async (req: Request, res: Response, next: NextFunction) => {
+apiRouter.post('/create-supplier', requireAuth, async (req: Request, res: Response, next: NextFunction) => {
     try {
         await createSupplierController(req, res);
     } catch (error) {
@@ -27,6 +29,13 @@ apiRouter.patch('/supplier/:id/status', async (req: Request, res: Response, next
     }
 });
 
+apiRouter.get('/get-supplier-profile', requireSupplier, async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        await getSupplierProfileController(req, res);
+    } catch (error) {
+        next(error);
+    }
+});
 
 /**
  * Beneficiary routes

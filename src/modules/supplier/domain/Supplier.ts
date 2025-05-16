@@ -6,6 +6,7 @@ import { validateSupplier } from "../utils/validateSupplier";
  */
 export class Supplier {
     constructor(
+        public readonly sub: string,
         public readonly name: string,
         public readonly establishment: Establishment,
         public readonly address: Address,
@@ -32,6 +33,7 @@ export class Supplier {
      */
     static create(data: Omit<Supplier, 'createdAt' | 'updatedAt' | 'status'>): Supplier {
         return new Supplier(
+            data.sub,
             data.name,
             data.establishment,
             data.address,
@@ -55,6 +57,7 @@ export class Supplier {
         updates: Partial<Omit<Supplier, 'createdAt' | 'status'>>
     ): Supplier {
         return new Supplier(
+            existingSupplier.sub,
             updates.name ?? existingSupplier.name,
             updates.establishment ?? existingSupplier.establishment,
             updates.address ?? existingSupplier.address,
@@ -81,6 +84,7 @@ export class Supplier {
         newStatus: AccountStatus
     ): Supplier {
         return new Supplier(
+            existingSupplier.sub,
             existingSupplier.name,
             existingSupplier.establishment,
             existingSupplier.address,

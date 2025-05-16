@@ -3,6 +3,11 @@ import { SupplierDocument } from '../types';
 import { AccountStatus } from '../../../shared/types';
 
 const SupplierSchema = new Schema<SupplierDocument>({
+    sub: {
+        type: String,
+        required: true,
+        unique: true
+    },
     name: {
         type: String,
         required: true
