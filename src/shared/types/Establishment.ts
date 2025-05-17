@@ -1,4 +1,4 @@
-export type Establishment = 'restaurant'
+export type Establishment = 'Restaurant'
     | 'Cafe'
     | 'Bar'
     | 'Hotel'
