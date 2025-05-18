@@ -40,6 +40,7 @@ const ItemSchema = new Schema<ItemDocument>({
             'CONDIMENTS',
             'FROZEN_FOODS',
             'CANNED_GOODS',
+            'OTHER'
         ],
         required: true
     },

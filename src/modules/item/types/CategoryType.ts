@@ -11,4 +11,5 @@ export enum CategoryType {
     CONDIMENTS = 'CONDIMENTS',
     FROZEN_FOODS = 'FROZEN_FOODS',
     CANNED_GOODS = 'CANNED_GOODS',
+    OTHER = 'OTHER'
 }
