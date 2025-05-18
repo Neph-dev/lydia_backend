@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { AccountStatus, Address, DonationDays, DonationFrequency, Establishment } from "../../../shared/types";
 import { validateSupplier } from "../utils/validateSupplier";
 
@@ -21,7 +22,8 @@ export class Supplier {
         public readonly coverPicture?: string,
         public readonly status: AccountStatus = AccountStatus.PENDING,
         public readonly createdAt: Date = new Date(),
-        public readonly updatedAt: Date = new Date()
+        public readonly updatedAt: Date = new Date(),
+        public readonly _id?: mongoose.Types.ObjectId,
     ) {
         validateSupplier(this);
     }

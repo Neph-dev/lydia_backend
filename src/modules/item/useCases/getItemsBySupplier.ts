@@ -4,18 +4,10 @@ import { Item } from "../domain";
 import { ItemRepo } from "../types";
 
 export const getItemsBySupplier = async (supplierId: string, itemRepo: ItemRepo): Promise<Item[]> => {
-    const { ITEM, MISSING_PARAMS } = ErrorResponse;
+    const { ITEM } = ErrorResponse;
 
     try {
-        if (!supplierId) {
-            throw new AppError(
-                MISSING_PARAMS.message.replace(":param", "supplierId"),
-                MISSING_PARAMS.code,
-                MISSING_PARAMS.statusCode
-            );
-        }
-
-        const items = await itemRepo.findByAnything('supplierId', supplierId);
+        const items = await itemRepo.findByAnything('supplierId', supplierId.toString());
         return items;
     } catch (error) {
         if (error instanceof AppError) {

@@ -64,7 +64,9 @@ export class MongooseSupplierRepo implements SupplierRepo {
             doc.website,
             doc.coverPicture,
             doc.status,
-            doc.createdAt
+            doc.createdAt,
+            doc.updatedAt,
+            doc._id
         );
     }
 }

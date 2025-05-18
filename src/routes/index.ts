@@ -60,7 +60,7 @@ apiRouter.patch('/beneficiary/:id/status', async (req: Request, res: Response, n
 /**
  * Item routes
  */
-apiRouter.post('/create-item', async (req: Request, res: Response, next: NextFunction) => {
+apiRouter.post('/create-item', requireSupplier, async (req: Request, res: Response, next: NextFunction) => {
     try {
         await createItemController(req, res);
     } catch (error) {
@@ -68,7 +68,7 @@ apiRouter.post('/create-item', async (req: Request, res: Response, next: NextFun
     }
 });
 
-apiRouter.get('/get-supplier-items', async (req: Request, res: Response, next: NextFunction) => {
+apiRouter.get('/get-supplier-items/:supplierId', requireAuth, async (req: Request, res: Response, next: NextFunction) => {
     try {
         await getItemsBySupplierController(req, res);
     } catch (error) {

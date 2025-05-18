@@ -10,7 +10,7 @@ export const getItemsBySupplierController = async (req: Request, res: Response) 
     try {
         const repo = new MongooseItemRepo();
 
-        const { supplierId } = req.body;
+        const { supplierId } = req.params;
 
         const items = await getItemsBySupplier(supplierId, repo);
         res.status(200).json({
